@@ -13,6 +13,7 @@
 
             Console.WriteLine(expression.ToInfixNotation());
             Console.WriteLine(expression.ToPostfixNotation());
+            Console.WriteLine(expression.Evaluate());
         }
     }
 }
