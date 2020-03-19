@@ -6,14 +6,41 @@
     {
         public static void Main(string[] args)
         {
-            var expression = Expression.Operation(
-                Operation.Addition,
-                Expression.Operation(Operation.Multiplication, Expression.Number(2), Expression.Number(3)),
-                Expression.Number(5));
+            {
+                var postfixStack =
+                    PostfixStack.Empty()
+                        .AddValue(10)
+                        .AddValue(7)
+                        .AddValue(2)
+                        .AddOperation(Operation.Subtraction)
+                        .AddOperation(Operation.Subtraction);
 
-            Console.WriteLine(expression.ToInfixNotation());
-            Console.WriteLine(expression.ToPostfixNotation());
-            Console.WriteLine(expression.Evaluate());
+                Display(postfixStack);
+            }
+
+            Console.WriteLine();
+
+            {
+                var postfixStack =
+                    PostfixStack.Empty()
+                        .AddValue(10)
+                        .AddValue(7)
+                        .AddOperation(Operation.Subtraction)
+                        .AddValue(2)
+                        .AddOperation(Operation.Subtraction);
+
+                Display(postfixStack);
+            }
+        }
+
+        private static void Display(PostfixStack postfixStack)
+        {
+            var expression = postfixStack.ToExpression();
+
+            Console.WriteLine("Infix: " + expression.ToInfixNotation());
+            Console.WriteLine("Postfix 1: " + expression.ToPostfixNotation());
+            Console.WriteLine("Postfix 2: " + postfixStack.Representation());
+            Console.WriteLine("Value: " + expression.Evaluate());
         }
     }
 }

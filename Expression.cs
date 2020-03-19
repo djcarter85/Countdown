@@ -1,6 +1,7 @@
 ﻿namespace Countdown
 {
     using System;
+    using static OperationHelpers;
 
     public abstract class Expression
     {
@@ -50,36 +51,17 @@
                 var evaluatedLeft = this.left.Evaluate();
                 var evaluatedRight = this.right.Evaluate();
 
-                return this.operation switch
-                {
-                    Countdown.Operation.Addition => (evaluatedLeft + evaluatedRight),
-                    Countdown.Operation.Subtraction => (evaluatedLeft - evaluatedRight), // TODO throw if negative
-                    Countdown.Operation.Multiplication => (evaluatedLeft * evaluatedRight),
-                    Countdown.Operation.Division => (evaluatedLeft / evaluatedRight), // TODO throw if fractional
-                    _ => throw new ArgumentOutOfRangeException()
-                };
+                return OperationHelpers.Evaluate(this.operation, evaluatedLeft, evaluatedRight);
             }
 
             public override string ToInfixNotation()
             {
-                return $"({this.left.ToInfixNotation()} {this.GetOperatorSymbol()} {this.right.ToInfixNotation()})";
+                return $"({this.left.ToInfixNotation()} {GetSymbol(this.operation)} {this.right.ToInfixNotation()})";
             }
 
             public override string ToPostfixNotation()
             {
-                return $"{this.left.ToPostfixNotation()} {this.right.ToPostfixNotation()} {this.GetOperatorSymbol()}";
-            }
-
-            private string GetOperatorSymbol()
-            {
-                return this.operation switch
-                {
-                    Countdown.Operation.Addition => "+",
-                    Countdown.Operation.Subtraction => "-",
-                    Countdown.Operation.Multiplication => "*",
-                    Countdown.Operation.Division => "/",
-                    _ => throw new ArgumentOutOfRangeException()
-                };
+                return $"{this.left.ToPostfixNotation()} {this.right.ToPostfixNotation()} {GetSymbol(this.operation)}";
             }
         }
     }
