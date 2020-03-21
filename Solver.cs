@@ -7,10 +7,11 @@
     {
         private readonly ExpressionCalculator expressionCalculator = new ExpressionCalculator();
 
-        public ValidExpression Solve(IReadOnlyList<int> numbers, int target)
+        public IEnumerable<ValidExpression> Solve(IReadOnlyList<int> numbers, int target)
         {
-            return this.GetAllValidExpressions(numbers)
-                .FirstOrDefault(validExpression => validExpression.Result == target);
+            var allValidExpressions = this.GetAllValidExpressions(numbers);
+
+            return allValidExpressions.Where(ve => ve.Result == target);
         }
 
         public IEnumerable<ValidExpression> GetAllValidExpressions(IReadOnlyList<int> numbers)

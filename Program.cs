@@ -17,18 +17,15 @@
 
             var solutions = solver.Solve(numbers, target);
 
-            if (solutionOrNull == null)
+            var solutionCount = 0;
+            foreach (var solution in solutions)
             {
-                Console.WriteLine("No solution found");
-            }
-            else
-            {
-                var solution = solutionOrNull;
-
-                Console.WriteLine($"{solution.Result} = {solution.Expression.ToInfixNotation()}");
+                Console.WriteLine($"{solution.Expression.ToInfixNotation()}");
+                solutionCount++;
             }
 
             Console.WriteLine();
+            Console.WriteLine($"{solutionCount} solutions found");
             Console.WriteLine($"Elapsed: {stopwatch.ElapsedMilliseconds} ms");
         }
     }
