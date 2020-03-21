@@ -8,6 +8,8 @@
         {
         }
 
+        public static IComparer<Operation> Comparer { get; } = new OperationComparer();
+
         public static Operation Addition { get; } = new AdditionOperation();
 
         public static Operation Subtraction { get; } = new SubtractionOperation();
@@ -20,6 +22,8 @@
 
         public abstract bool IsCommutative { get; }
 
+        protected abstract int Ordering { get; }
+
         public abstract Result Evaluate(int left, int right);
 
         public abstract string Representation();
@@ -27,6 +31,8 @@
         private class AdditionOperation : Operation
         {
             public override bool IsCommutative => true;
+
+            protected override int Ordering => 1;
 
             public override Result Evaluate(int left, int right) => Result.Success(left + right);
 
@@ -36,6 +42,8 @@
         private class SubtractionOperation : Operation
         {
             public override bool IsCommutative => false;
+
+            protected override int Ordering => 2;
 
             public override Result Evaluate(int left, int right)
             {
@@ -56,6 +64,8 @@
         {
             public override bool IsCommutative => true;
 
+            protected override int Ordering => 3;
+
             public override Result Evaluate(int left, int right) => Result.Success(left * right);
 
             public override string Representation() => "*";
@@ -64,6 +74,8 @@
         private class DivisionOperation : Operation
         {
             public override bool IsCommutative => false;
+
+            protected override int Ordering => 4;
 
             public override Result Evaluate(int left, int right)
             {
@@ -81,6 +93,14 @@
             }
 
             public override string Representation() => "/";
+        }
+
+        private class OperationComparer : IComparer<Operation>
+        {
+            public int Compare(Operation x, Operation y)
+            {
+                return x.Ordering.CompareTo(y.Ordering);
+            }
         }
     }
 }

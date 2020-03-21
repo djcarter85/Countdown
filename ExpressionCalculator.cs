@@ -47,11 +47,25 @@
                     {
                         foreach (var rightExpression in rightExpressions)
                         {
-                            yield return Expression.Operation(operation, leftExpression, rightExpression);
+                            if (ExpressionShouldBeIncluded(operation, leftExpression, rightExpression))
+                            {
+                                yield return Expression.Operation(operation, leftExpression, rightExpression);
+                            }
                         }
                     }
                 }
             }
+        }
+
+        private static bool ExpressionShouldBeIncluded(Operation operation, Expression leftExpression, Expression rightExpression)
+        {
+            if (!operation.IsCommutative)
+            {
+                return true;
+            }
+
+            // Only include one variant of a commutative operation
+            return Expression.Comparer.Compare(leftExpression, rightExpression) <= 0;
         }
 
         private static IEnumerable<NumberSplit> GetSplits(IReadOnlyList<int> numbers)
