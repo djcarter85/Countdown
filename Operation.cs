@@ -37,7 +37,17 @@
         {
             public override bool IsCommutative => false;
             
-            public override int Evaluate(int left, int right) => left - right; // TODO throw if negative
+            public override int Evaluate(int left, int right)
+            {
+                var result = left - right;
+
+                if (result < 0)
+                {
+                    throw new OperationException($"{left} - {right} is negative");
+                }
+
+                return result;
+            }
 
             public override string Representation() => "-";
         }
@@ -55,7 +65,20 @@
         {
             public override bool IsCommutative => false;
             
-            public override int Evaluate(int left, int right) => left / right; // TODO throw if fractional
+            public override int Evaluate(int left, int right)
+            {
+                if (right == 0)
+                {
+                    throw new OperationException($"{left} / {right} makes no sense");
+                }
+
+                if (left % right != 0)
+                {
+                    throw new OperationException($"{left} / {right} is not an integer");
+                }
+
+                return left / right;
+            }
 
             public override string Representation() => "/";
         }
