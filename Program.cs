@@ -1,46 +1,39 @@
 ﻿namespace Countdown
 {
     using System;
+    using System.Diagnostics;
 
     public static class Program
     {
         public static void Main(string[] args)
         {
-            {
-                var postfixStack =
-                    PostfixStack.Empty()
-                        .AddValue(10)
-                        .AddValue(7)
-                        .AddValue(2)
-                        .AddOperation(Operation.Subtraction)
-                        .AddOperation(Operation.Subtraction);
+            var numbers = new[] { 1, 2, 3, 4 };
+            var expressionCalculator = new ExpressionCalculator();
 
-                Display(postfixStack);
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            var expressions = expressionCalculator.GetAllPossibleExpressions(numbers);
+
+            foreach (var expression in expressions)
+            {
+                string evaluatedExpression;
+                string errorMessage;
+                try
+                {
+                    evaluatedExpression = expression.Evaluate().ToString();
+                    errorMessage = null;
+                }
+                catch (OperationException operationException)
+                {
+                    evaluatedExpression = "N/A";
+                    errorMessage = $" [{operationException.Message}]";
+                }
+
+                Console.WriteLine($"{evaluatedExpression,-5} = {expression.ToInfixNotation()}{errorMessage}");
             }
 
-            Console.WriteLine();
-
-            {
-                var postfixStack =
-                    PostfixStack.Empty()
-                        .AddValue(10)
-                        .AddValue(7)
-                        .AddOperation(Operation.Subtraction)
-                        .AddValue(2)
-                        .AddOperation(Operation.Subtraction);
-
-                Display(postfixStack);
-            }
-        }
-
-        private static void Display(PostfixStack postfixStack)
-        {
-            var expression = postfixStack.ToExpression();
-
-            Console.WriteLine("Infix: " + expression.ToInfixNotation());
-            Console.WriteLine("Postfix 1: " + expression.ToPostfixNotation());
-            Console.WriteLine("Postfix 2: " + postfixStack.Representation());
-            Console.WriteLine("Value: " + expression.Evaluate());
+            Console.WriteLine(stopwatch.ElapsedMilliseconds);
         }
     }
 }
