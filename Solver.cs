@@ -53,7 +53,7 @@
             }
             else
             {
-                foreach (var head in numbers)
+                foreach (var head in numbers.Distinct())
                 {
                     var tail = numbers.Without(head).ToArray();
 
