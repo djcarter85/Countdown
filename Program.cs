@@ -1,7 +1,9 @@
-﻿namespace Countdown
+namespace Countdown
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
 
     public static class Program
     {
@@ -15,27 +17,38 @@
 
             var expressions = expressionCalculator.GetAllPossibleExpressions(numbers);
 
+            var validExpressions = new List<ValidExpression>();
+
             foreach (var expression in expressions)
             {
                 var result = expression.Evaluate();
 
-                string evaluatedExpression;
-                string errorMessage;
                 if (result.IsSuccess)
                 {
-                    evaluatedExpression = result.Value.ToString();
-                    errorMessage = null;
+                    validExpressions.Add(new ValidExpression(expression, result.Value));
                 }
-                else
-                {
-                    evaluatedExpression = "N/A";
-                    errorMessage = $" [{result.Error}]";
-                }
-
-                Console.WriteLine($"{evaluatedExpression,-5} = {expression.ToInfixNotation()}{errorMessage}");
             }
 
-            Console.WriteLine(stopwatch.ElapsedMilliseconds);
+            foreach (var validExpression in validExpressions.OrderBy(ve => ve.Result))
+            {
+                Console.WriteLine($"{validExpression.Result,-5} = {validExpression.Expression.ToInfixNotation()}");
+            }
+
+            Console.WriteLine();
+            Console.WriteLine($"Elapsed: {stopwatch.ElapsedMilliseconds} ms");
+        }
+
+        private class ValidExpression
+        {
+            public ValidExpression(Expression expression, int result)
+            {
+                this.Expression = expression;
+                this.Result = result;
+            }
+
+            public Expression Expression { get; }
+
+            public int Result { get; }
         }
     }
 }
