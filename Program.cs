@@ -1,7 +1,8 @@
-﻿namespace Countdown
+namespace Countdown
 {
     using System;
     using System.Diagnostics;
+    using MoreLinq;
 
     public static class Program
     {
@@ -17,15 +18,17 @@
 
             var solutions = solver.Solve(numbers, target);
 
+            var optimalSolutions = solutions.MinBy(ve => ve.Expression.NumericalInputs());
+
             var solutionCount = 0;
-            foreach (var solution in solutions)
+            foreach (var solution in optimalSolutions)
             {
                 Console.WriteLine($"{solution.Expression.ToInfixNotation()}");
                 solutionCount++;
             }
 
             Console.WriteLine();
-            Console.WriteLine($"{solutionCount} solutions found");
+            Console.WriteLine($"{solutionCount} optimal solutions found");
             Console.WriteLine($"Elapsed: {stopwatch.ElapsedMilliseconds} ms");
         }
     }

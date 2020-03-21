@@ -10,6 +10,8 @@
 
         public abstract Result Evaluate();
 
+        public abstract int NumericalInputs();
+
         public abstract string ToInfixNotation();
 
         public abstract string ToPostfixNotation();
@@ -24,6 +26,8 @@
             }
 
             public override Result Evaluate() => Result.Success(this.value);
+
+            public override int NumericalInputs() => 1;
 
             public override string ToInfixNotation() => this.value.ToString();
 
@@ -62,15 +66,14 @@
                 return this.operation.Evaluate(leftResult.Value, rightResult.Value);
             }
 
-            public override string ToInfixNotation()
-            {
-                return $"({this.left.ToInfixNotation()} {this.operation.Representation()} {this.right.ToInfixNotation()})";
-            }
+            public override int NumericalInputs() =>
+                this.left.NumericalInputs() + this.right.NumericalInputs();
 
-            public override string ToPostfixNotation()
-            {
-                return $"{this.left.ToPostfixNotation()} {this.right.ToPostfixNotation()} {this.operation.Representation()}";
-            }
+            public override string ToInfixNotation() =>
+                $"({this.left.ToInfixNotation()} {this.operation.Representation()} {this.right.ToInfixNotation()})";
+
+            public override string ToPostfixNotation() =>
+                $"{this.left.ToPostfixNotation()} {this.right.ToPostfixNotation()} {this.operation.Representation()}";
         }
     }
 }
