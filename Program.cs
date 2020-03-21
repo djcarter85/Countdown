@@ -17,17 +17,19 @@
 
             foreach (var expression in expressions)
             {
+                var result = expression.Evaluate();
+
                 string evaluatedExpression;
                 string errorMessage;
-                try
+                if (result.IsSuccess)
                 {
-                    evaluatedExpression = expression.Evaluate().ToString();
+                    evaluatedExpression = result.Value.ToString();
                     errorMessage = null;
                 }
-                catch (OperationException operationException)
+                else
                 {
                     evaluatedExpression = "N/A";
-                    errorMessage = $" [{operationException.Message}]";
+                    errorMessage = $" [{result.Error}]";
                 }
 
                 Console.WriteLine($"{evaluatedExpression,-5} = {expression.ToInfixNotation()}{errorMessage}");

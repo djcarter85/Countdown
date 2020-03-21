@@ -8,7 +8,7 @@
         public static Expression Operation(Operation operation, Expression left, Expression right) =>
             new OperationExpression(operation, left, right);
 
-        public abstract int Evaluate();
+        public abstract Result Evaluate();
 
         public abstract string ToInfixNotation();
 
@@ -23,7 +23,7 @@
                 this.value = value;
             }
 
-            public override int Evaluate() => this.value;
+            public override Result Evaluate() => Result.Success(this.value);
 
             public override string ToInfixNotation() => this.value.ToString();
 
@@ -43,12 +43,23 @@
                 this.right = right;
             }
 
-            public override int Evaluate()
+            public override Result Evaluate()
             {
-                var evaluatedLeft = this.left.Evaluate();
-                var evaluatedRight = this.right.Evaluate();
+                var leftResult = this.left.Evaluate();
 
-                return this.operation.Evaluate(evaluatedLeft, evaluatedRight);
+                if (!leftResult.IsSuccess)
+                {
+                    return Result.Failure(leftResult.Error);
+                }
+
+                var rightResult = this.right.Evaluate();
+
+                if (!rightResult.IsSuccess)
+                {
+                    return Result.Failure(rightResult.Error);
+                }
+
+                return this.operation.Evaluate(leftResult.Value, rightResult.Value);
             }
 
             public override string ToInfixNotation()
