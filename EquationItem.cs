@@ -67,7 +67,7 @@
 
             public override string Representation()
             {
-                return OperationHelpers.GetSymbol(this.operation);
+                return this.operation.Representation();
             }
         }
     }

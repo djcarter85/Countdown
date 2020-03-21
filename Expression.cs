@@ -1,8 +1,5 @@
 ﻿namespace Countdown
 {
-    using System;
-    using static OperationHelpers;
-
     public abstract class Expression
     {
         public static Expression Number(int value) =>
@@ -51,17 +48,17 @@
                 var evaluatedLeft = this.left.Evaluate();
                 var evaluatedRight = this.right.Evaluate();
 
-                return OperationHelpers.Evaluate(this.operation, evaluatedLeft, evaluatedRight);
+                return this.operation.Evaluate(evaluatedLeft, evaluatedRight);
             }
 
             public override string ToInfixNotation()
             {
-                return $"({this.left.ToInfixNotation()} {GetSymbol(this.operation)} {this.right.ToInfixNotation()})";
+                return $"({this.left.ToInfixNotation()} {this.operation.Representation()} {this.right.ToInfixNotation()})";
             }
 
             public override string ToPostfixNotation()
             {
-                return $"{this.left.ToPostfixNotation()} {this.right.ToPostfixNotation()} {GetSymbol(this.operation)}";
+                return $"{this.left.ToPostfixNotation()} {this.right.ToPostfixNotation()} {this.operation.Representation()}";
             }
         }
     }
