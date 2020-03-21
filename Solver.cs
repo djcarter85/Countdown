@@ -55,7 +55,7 @@
             {
                 foreach (var head in numbers)
                 {
-                    var tail = numbers.Except(new[] { head }).ToArray();
+                    var tail = numbers.Without(head).ToArray();
 
                     foreach (var orderedSubsetOfTail in GetAllOrderedSubsetsOfLength(tail, length - 1))
                     {
